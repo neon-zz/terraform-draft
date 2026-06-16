@@ -191,7 +191,9 @@ window.onload = function () {
 
 
 // 画像追加
-async function addImages(){
+function addImages(){
+
+    alert("addImages開始");
 
     const files =
         document
@@ -199,7 +201,7 @@ async function addImages(){
             "imageInput"
         )
         .files;
-
+    
     if(files.length===0){
 
         alert(
