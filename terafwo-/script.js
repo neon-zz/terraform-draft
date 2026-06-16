@@ -1,18 +1,88 @@
-let corporations =
-    JSON.parse(
-        localStorage.getItem("corporations")
-    ) || [];
+let db;
+let corporations = [];
 
 let players = [];
 let playerNames = [];
 let currentPlayer = 0;
 
-updateCount();
+const request =
+    indexedDB.open(
+        "TerraformDraftDB",
+        1
+    );
+
+request.onupgradeneeded =
+function(event){
+
+    db =
+        event.target.result;
+
+    if(
+        !db.objectStoreNames.contains(
+            "corporations"
+        )
+    ){
+
+        db.createObjectStore(
+            "corporations",
+            {
+                keyPath:"id",
+                autoIncrement:true
+            }
+        );
+    }
+};
+
+request.onsuccess =
+function(event){
+
+    db =
+        event.target.result;
+
+    loadCorporations();
+
+    createPlayerInputs();
+};
+
+request.onerror =
+function(){
+
+    alert(
+        "データベース作成失敗"
+    );
+};
 
 function updateCount() {
 
     document.getElementById("count").innerText =
         `登録企業数: ${corporations.length}`;
+}
+
+function loadCorporations(){
+
+const transaction =
+    db.transaction(
+        ["corporations"],
+        "readonly"
+    );
+
+const store =
+    transaction.objectStore(
+        "corporations"
+    );
+
+const request =
+    store.getAll();
+
+request.onsuccess =
+function(){
+
+    corporations =
+        request.result;
+
+    updateCount();
+};
+
 }
 
 
@@ -50,113 +120,155 @@ window.onload = function () {
 
 
 // 画像追加
-function addImages() {
+async function addImages(){
 
-const files =
-    document.getElementById("imageInput").files;
-
-if (files.length === 0) {
-
-    alert("画像を選択してください");
-    return;
-}
-
-let loaded = 0;
-
-for (const file of files) {
-
-    const reader = new FileReader();
-
-    reader.onload = function (event) {
-
-        const img = new Image();
-
-        img.onload = function () {
-
-            const canvas =
-                document.createElement("canvas");
-
-            const maxWidth = 600;
-
-            const scale =
-                maxWidth / img.width;
-
-            canvas.width = maxWidth;
-
-            canvas.height =
-                img.height * scale;
-
-            const ctx =
-                canvas.getContext("2d");
-
-            ctx.drawImage(
-                img,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-            const compressed =
-                canvas.toDataURL(
-                    "image/jpeg",
-                    0.7
-                );
-
-            corporations.push({
-                image: compressed
-            });
-
-            loaded++;
-
-            if (loaded === files.length) {
-
-                localStorage.setItem(
-                    "corporations",
-                    JSON.stringify(
-                        corporations
-                    )
-                );
-
-                updateCount();
-
-                alert(
-                    `${files.length}枚追加完了`
-                );
-            }
-        };
-
-        img.src = event.target.result;
-    };
-
-    reader.readAsDataURL(file);
-}
-
-}
-
-
-// 全削除
-function clearImages() {
-
-    if (
-        !confirm(
-            "全企業を削除しますか？"
+    const files =
+        document
+        .getElementById(
+            "imageInput"
         )
-    ) {
+        .files;
+
+    if(files.length===0){
+
+        alert(
+            "画像を選択してください"
+        );
+
         return;
     }
 
-    corporations = [];
+    let saved = 0;
 
-    localStorage.removeItem(
-        "corporations"
-    );
+    for(const file of files){
 
-    updateCount();
+        const reader =
+            new FileReader();
 
-    alert("削除しました");
+        reader.onload =
+        function(event){
+
+            const img =
+                new Image();
+
+            img.onload =
+            function(){
+
+                const canvas =
+                    document.createElement(
+                        "canvas"
+                    );
+
+                const maxWidth =
+                    400;
+
+                const scale =
+                    maxWidth /
+                    img.width;
+
+                canvas.width =
+                    maxWidth;
+
+                canvas.height =
+                    img.height *
+                    scale;
+
+                const ctx =
+                    canvas.getContext(
+                        "2d"
+                    );
+
+                ctx.drawImage(
+                    img,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                const compressed =
+                    canvas.toDataURL(
+                        "image/jpeg",
+                        0.6
+                    );
+
+                const tx =
+                    db.transaction(
+                        ["corporations"],
+                        "readwrite"
+                    );
+
+                const store =
+                    tx.objectStore(
+                        "corporations"
+                    );
+
+                store.add({
+                    image:
+                    compressed
+                });
+
+                saved++;
+
+                if(
+                    saved===
+                    files.length
+                ){
+
+                    loadCorporations();
+
+                    alert(
+                        `${saved}枚追加完了`
+                    );
+                }
+            };
+
+            img.src =
+                event.target.result;
+        };
+
+        reader.readAsDataURL(
+            file
+        );
+    }
 }
 
+// 全削除
+function clearImages(){
+
+    if(
+        !confirm(
+            "全企業を削除しますか？"
+        )
+    ){
+        return;
+    }
+
+    const tx =
+        db.transaction(
+            ["corporations"],
+            "readwrite"
+        );
+
+    const store =
+        tx.objectStore(
+            "corporations"
+        );
+
+    store.clear();
+
+    tx.oncomplete =
+    function(){
+
+        corporations = [];
+
+        updateCount();
+
+        alert(
+            "削除しました"
+        );
+    };
+}
 
 // シャッフル
 function shuffle(array) {
