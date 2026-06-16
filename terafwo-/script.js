@@ -159,18 +159,8 @@ async function addImages(){
                         "canvas"
                     );
 
-                const maxWidth = img.width;
-
-                const scale =
-                    maxWidth /
-                    img.width;
-
-                canvas.width =
-                    maxWidth;
-
-                canvas.height =
-                    img.height *
-                    scale;
+                canvas.width = img.width;
+                canvas.height = img.height;
 
                 const ctx =
                     canvas.getContext(
@@ -181,15 +171,13 @@ async function addImages(){
                     img,
                     0,
                     0,
-                    canvas.width,
-                    canvas.height
                 );
 
 const compressed =
     canvas.toDataURL(
         "image/jpeg",
-        1.0
-    );
+        0.9
+    );                
                 const tx =
                     db.transaction(
                         ["corporations"],
