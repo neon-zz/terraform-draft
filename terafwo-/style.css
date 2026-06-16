@@ -70,3 +70,15 @@ text-align:center;
     width:500px;
     max-width:90vw;
 }
+#companyList{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:center;
+}
+
+#companyList img{
+width:120px;
+border-radius:8px;
+border:2px solid #ccc;
+}
