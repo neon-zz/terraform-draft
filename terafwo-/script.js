@@ -392,30 +392,23 @@ if (
     playerNames = [];
 
     for (
-        let i = 0;
-        i < playerCount;
-        i++
-    ) {
+let i = 0;
+i < playerCount;
+i++
+) {
 
-        playerNames.push(
+playerNames.push(
 
-            document
-                .getElementById(
-                    `playerName${i}`
-                )
-                .value
+    document
+        .getElementById(
+            `playerName${i}`
+        )
+        .value
 
-            ||
+    ||
 
-            `プレイヤー${i + 1}`
-        );
-
-const draftCount =
-    Number(
-        document.getElementById(
-            "draftCount"
-        ).value
-    );
+    `プレイヤー${i + 1}`
+);
 
 const choices = [];
 
@@ -437,6 +430,8 @@ players.push({
     selected: null
 
 });
+}
+
 
     currentPlayer = 0;
 
