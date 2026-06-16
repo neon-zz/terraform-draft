@@ -316,17 +316,17 @@ function clearImages(){
 
     store.clear();
 
-    tx.oncomplete =
-    function(){
+tx.oncomplete =
+function(){
 
-        corporations = [];
+    corporations = [];
 
-        updateCount();
+    loadCorporations();
 
-        alert(
-            "削除しました"
-        );
-    };
+    alert(
+        "削除しました"
+    );
+};
 }
 
 // シャッフル
