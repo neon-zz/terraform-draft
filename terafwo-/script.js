@@ -363,10 +363,18 @@ function startDraft() {
             ).value
         );
 
-    if (
-        corporations.length <
-        playerCount * 2
-    ) {
+const draftCount =
+    Number(
+        document.getElementById(
+            "draftCount"
+        ).value
+    );
+
+if (
+    corporations.length <
+    playerCount * draftCount
+)
+    {
 
         alert(
             "企業画像が足りません"
@@ -402,17 +410,33 @@ function startDraft() {
             `プレイヤー${i + 1}`
         );
 
-        players.push({
+const draftCount =
+    Number(
+        document.getElementById(
+            "draftCount"
+        ).value
+    );
 
-            choices: [
-                deck.pop(),
-                deck.pop()
-            ],
+const choices = [];
 
-            selected: null
+for(
+    let j = 0;
+    j < draftCount;
+    j++
+){
 
-        });
-    }
+    choices.push(
+        deck.pop()
+    );
+}
+
+players.push({
+
+    choices: choices,
+
+    selected: null
+
+});
 
     currentPlayer = 0;
 
@@ -470,32 +494,51 @@ function nextPlayer() {
 // プレイヤー表示
 function showPlayer() {
 
-    const player =
-        players[currentPlayer];
+const player =
+    players[currentPlayer];
 
-    document
-        .getElementById(
-            "playerTitle"
-        )
-        .innerText =
-        `${playerNames[currentPlayer]}
+document
+    .getElementById(
+        "playerTitle"
+    )
+    .innerText =
+    `${playerNames[currentPlayer]}
+
 さんの企業選択`;
 
-    document
-        .getElementById(
-            "card1"
-        )
-        .src =
-        player.choices[0].image;
+const cards =
+    document.getElementById(
+        "cards"
+    );
 
-    document
-        .getElementById(
-            "card2"
-        )
-        .src =
-        player.choices[1].image;
+cards.innerHTML = "";
+
+player.choices.forEach(
+    (corp,index) => {
+
+        const img =
+            document.createElement(
+                "img"
+            );
+
+        img.src =
+            corp.image;
+
+        img.onclick =
+        function(){
+
+            selectCard(
+                index
+            );
+        };
+
+        cards.appendChild(
+            img
+        );
+    }
+);
+
 }
-
 
 // 企業選択
 function selectCard(index) {
