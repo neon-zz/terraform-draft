@@ -316,10 +316,17 @@ function clearImages(){
 
     store.clear();
 
-tx.oncomplete =
-function(){
+    tx.oncomplete =
+    function(){
 
-    loadCorporations();
+        corporations = [];
+
+        updateCount();
+
+        document.getElementById(
+            "companyList"
+        ).innerHTML = "";
+
 
     alert(
         "削除しました"
