@@ -319,8 +319,6 @@ function clearImages(){
 tx.oncomplete =
 function(){
 
-    corporations = [];
-
     loadCorporations();
 
     alert(
