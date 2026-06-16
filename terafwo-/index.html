@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+<title>テラフォ企業ドラフト</title>
+
+<link rel="stylesheet"
+      href="style.css">
+
+</head>
+
+<body>
+
+<h1>テラフォ企業ドラフト</h1>
+
+<div class="panel">
+
+    <h2>企業登録</h2>
+
+    <input
+        type="file"
+        id="imageInput"
+        multiple
+        accept="image/*">
+
+    <br><br>
+
+    <button onclick="addImages()">
+        画像追加
+    </button>
+
+    <button onclick="clearImages()">
+        全削除
+    </button>
+
+    <p id="count">
+        登録企業数: 0
+    </p>
+
+</div>
+
+<div class="panel">
+
+    <h2>ゲーム設定</h2>
+
+    <label>
+        プレイヤー人数
+    </label>
+
+    <select
+        id="playerCount"
+        onchange="createPlayerInputs()">
+
+        <option value="1">1人</option>
+        <option value="2">2人</option>
+        <option value="3">3人</option>
+        <option value="4">4人</option>
+        <option value="5">5人</option>
+
+    </select>
+
+    <div id="playerNames"></div>
+
+    <br>
+
+    <button onclick="startDraft()">
+        ドラフト開始
+    </button>
+
+</div>
+
+<div
+    id="draftArea"
+    class="panel hidden">
+
+    <h2 id="playerTitle"></h2>
+
+    <div class="cards">
+
+        <img
+            id="card1"
+            onclick="selectCard(0)">
+
+        <img
+            id="card2"
+            onclick="selectCard(1)">
+
+    </div>
+
+</div>
+
+<div
+    id="nextPlayerArea"
+    class="panel hidden">
+
+    <h2 id="nextPlayerText"></h2>
+
+    <button onclick="nextPlayer()">
+        次へ
+    </button>
+
+</div>
+
+<div
+    id="resultArea"
+    class="panel hidden">
+
+    <h2>
+        企業公開
+    </h2>
+
+    <div id="results"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
