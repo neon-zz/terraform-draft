@@ -52,26 +52,59 @@ window.onload = function () {
 // 画像追加
 function addImages() {
 
-    const files =
-        document.getElementById("imageInput").files;
+const files =
+    document.getElementById("imageInput").files;
 
-    if (files.length === 0) {
+if (files.length === 0) {
 
-        alert("画像を選択してください");
+    alert("画像を選択してください");
+    return;
+}
 
-        return;
-    }
+let loaded = 0;
 
-    let loaded = 0;
+for (const file of files) {
 
-    for (const file of files) {
+    const reader = new FileReader();
 
-        const reader = new FileReader();
+    reader.onload = function (event) {
 
-        reader.onload = function (event) {
+        const img = new Image();
+
+        img.onload = function () {
+
+            const canvas =
+                document.createElement("canvas");
+
+            const maxWidth = 600;
+
+            const scale =
+                maxWidth / img.width;
+
+            canvas.width = maxWidth;
+
+            canvas.height =
+                img.height * scale;
+
+            const ctx =
+                canvas.getContext("2d");
+
+            ctx.drawImage(
+                img,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            const compressed =
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.7
+                );
 
             corporations.push({
-                image: event.target.result
+                image: compressed
             });
 
             loaded++;
@@ -80,17 +113,25 @@ function addImages() {
 
                 localStorage.setItem(
                     "corporations",
-                    JSON.stringify(corporations)
+                    JSON.stringify(
+                        corporations
+                    )
                 );
 
                 updateCount();
 
-                alert("追加完了");
+                alert(
+                    `${files.length}枚追加完了`
+                );
             }
         };
 
-        reader.readAsDataURL(file);
-    }
+        img.src = event.target.result;
+    };
+
+    reader.readAsDataURL(file);
+}
+
 }
 
 
