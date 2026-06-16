@@ -160,7 +160,7 @@ async function addImages(){
                     );
 
                 const maxWidth =
-                    1200;
+                    1600;
 
                 const scale =
                     maxWidth /
@@ -189,7 +189,7 @@ async function addImages(){
                 const compressed =
                     canvas.toDataURL(
                         "image/jpeg",
-                        0.9
+                        0.95
                     );
 
                 const tx =
