@@ -81,8 +81,79 @@ function(){
         request.result;
 
     updateCount();
-};
 
+    renderCompanies();
+};
+}
+
+function renderCompanies(){
+
+    const list =
+        document.getElementById(
+            "companyList"
+        );
+
+    list.innerHTML = "";
+
+    corporations.forEach(corp => {
+
+        const img =
+            document.createElement(
+                "img"
+            );
+
+        img.src =
+            corp.image;
+
+        img.style.width =
+            "120px";
+
+        img.style.margin =
+            "5px";
+
+        img.style.cursor =
+            "pointer";
+
+        img.onclick =
+        function(){
+
+            if(
+                confirm(
+                    "この企業を削除しますか？"
+                )
+            ){
+                deleteCompany(
+                    corp.id
+                );
+            }
+        };
+
+        list.appendChild(
+            img
+        );
+    });
+}
+
+function deleteCompany(id){
+
+    const tx =
+        db.transaction(
+            ["corporations"],
+            "readwrite"
+        );
+
+    const store =
+        tx.objectStore(
+            "corporations"
+        );
+
+    store.delete(id);
+
+    tx.oncomplete =
+    function(){
+
+        loadCorporations();
+    };
 }
 
 
